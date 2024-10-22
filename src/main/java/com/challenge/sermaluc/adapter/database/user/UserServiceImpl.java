@@ -1,5 +1,7 @@
 package com.challenge.sermaluc.adapter.database.user;
 
+import com.challenge.sermaluc.adapter.controller.model.Phones;
+import com.challenge.sermaluc.adapter.controller.model.outbound.UserDTO;
 import com.challenge.sermaluc.adapter.database.repository.UserRepository;
 import com.challenge.sermaluc.domain.model.entity.User;
 import com.challenge.sermaluc.domain.port.UserService;
@@ -26,7 +28,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> listAll() {
-        return userRepository.findAll();
+    public UserDTO listUserByEmail(String email) {
+
+        UserDTO user = userRepository.encontrarUserByEmail(email);
+        List<Phones> phones = userRepository.findPhonesByUserId(user.getId());
+        user.setPhones(phones);
+        return user;
     }
+
+
 }

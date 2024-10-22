@@ -18,38 +18,12 @@ import java.util.stream.Collectors;
 public class UserListUCImpl implements  UserListUC{
     private final UserService userService;
 
-
-    private  List<Phones> getPhoneUsersList( User user){
-        return user
-                .getPhoneList()
-                .stream()
-                .map( phone -> Phones.builder()
-                    .number(phone.getNumber())
-                    .countryCode(phone.getCountryCode())
-                    .cityCode(phone.getCityCode())
-                    .build())
-                .collect(Collectors.toList());
-    }
-
     /**
      * Caso de uso para listar usuarios
      * @return List<UserDTO>
      */
     @Override
-    public List<UserDTO> listAll() {
-        List<User>  users =  userService.listAll();
-        return users.stream().map(
-                user ->  UserDTO.builder()
-                        .id(user.getUserId())
-                        .email(user.getUsername())
-                        .name(user.getName())
-                        .token(user.getToken())
-                        .registered(user.getCreated())
-                        .updated(user.getModified())
-                        .lastLogin(user.getLastLogin())
-                        .state(user.getStatus().name())
-                        .phones( getPhoneUsersList(user))
-                        .build())
-                .collect(Collectors.toList());
+    public UserDTO listUserByEmail( String email) {
+        return  userService.listUserByEmail(email);
     }
 }

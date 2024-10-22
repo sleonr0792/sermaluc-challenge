@@ -57,24 +57,20 @@ public class UserController {
 
 
     /***qwe
-     * Controlador para listar los usuarios registrados con sus numeros correspondientes.
-     * @return List<UserDTO>
+     * Controlador para listar un usuario por correo.
+     * @return UserDTO
      */
     @Operation(
-            summary = "Listar usuarios",
-            description = "Controlador para listar usuarios",
+            summary = "Listar usuario",
+            description = "Controlador para listar usuario",
             tags = {"users"}
     )
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "lista de usuarios"),
+            @ApiResponse(responseCode = "200", description = "busqueda de usuario por email"),
     })
-    @GetMapping(value = "/list", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public List<UserDTO> listUsers() {
-        log.info("Listado de usuarios");
-        return userListUC.listAll();
+    @GetMapping(value = "/list/{email}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public UserDTO listUsers(@PathVariable String email) {
+        return userListUC.listUserByEmail(email);
     }
-
-
-
 
 }

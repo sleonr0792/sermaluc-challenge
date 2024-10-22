@@ -82,18 +82,18 @@ public class UserRegisterBankUCImpl implements  UserCreateUC{
         return buildUserDTO( userService.save(user), userInfo);
     }
 
-    private UserDTO buildUserDTO(User user, UserInfo userInfo){
+    private UserDTO buildUserDTO(User user, UserInfo userInfo) {
+        return new UserDTO(
+                user.getUserId(),
+                user.getUsername(),
+                user.getName(),
+                user.getToken(),
+                userInfo.getPhones(),
+                user.getCreated(),
+                user.getModified(),
+                user.getLastLogin(),
+                user.getStatus()
+        );
+    }
 
-        return UserDTO.builder()
-                .id( user.getUserId())
-                .email(user.getUsername())
-                .name(user.getName())
-                .token(user.getToken())
-                .phones(userInfo.getPhones())
-                .registered(user.getCreated())
-                .updated(user.getModified())
-                .lastLogin(user.getLastLogin())
-                .state(user.getStatus().name())
-                .build();
-        }
 }
