@@ -80,7 +80,7 @@ springdoc:
 
 user:
     domain:
-      pattern: "^(.+)@(domain.cl)$"
+      pattern: "^[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}$"
       error-format: "El correo debe seguir el siguiente formato: example@domain.cl"
       error-email-exist: "EL correo ya existe, use otro correo."
     password:

@@ -60,7 +60,7 @@ class UserValidatorServiceImplTest {
         user.setModified(now);
         user.setLastLogin(now);
         userDomainConfig = new UserDomainConfig();
-        userDomainConfig.setPattern("^(.+)@(domain.cl)$");
+        userDomainConfig.setPattern("^[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}$");
         userDomainConfig.setErrorEmailExist(errorEmailExist);
         userDomainConfig.setErrorFormat(formatErrorEmail);
         userPasswordConfig = new UserPasswordConfig();
@@ -73,7 +73,7 @@ class UserValidatorServiceImplTest {
     void throwIfEmailInvalid() {
         BusinessException exception = assertThrows(
                 BusinessException.class,
-                () ->  userValidatorService.throwIfEmailInvalid("emailQ@otrodominio.error.com")
+                () ->  userValidatorService.throwIfEmailInvalid("@dominio.cl")
         );
 
         assertEquals(formatErrorEmail, exception.getMessage());
