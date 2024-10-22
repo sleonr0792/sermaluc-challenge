@@ -1,6 +1,5 @@
 package com.challenge.sermaluc.config.exceptions;
 
-import com.challenge.sermaluc.config.enums.EResponse;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -11,13 +10,10 @@ public class BusinessException extends  RuntimeException{
 
     private static final long serialVErsionUID = 1553575465412356L;
 
-    private final EResponse code;
-    public BusinessException(EResponse code){
+    private final String message;
+    public BusinessException(String message){
         super("El usuario que intenta realizar la petición no es válido");
-        this.code = code;
-    }
+        this.message = message;
 
-    public EResponse getCode(){
-        return code;
     }
 }

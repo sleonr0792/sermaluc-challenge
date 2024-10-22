@@ -81,6 +81,9 @@ springdoc:
 
 user:
     domain:
-      pattern: ^(.+)@(domain.cl)$
+      pattern: "^(.+)@(domain.cl)$"
+      error-format: "El correo debe seguir el siguiente formato: example@domain.cl"
+      error-email-exist: "EL correo ya existe, use otro correo."
     password:
-      pattern: ^(?=.*\d){2}(?=.*[a-z])(?=.*[A-Z]).{4,}$
+      pattern: "^(?=.*\\d){2}(?=.*[a-z])(?=.*[A-Z]).{4,}$"
+      error-format: "Contraseña inválida, debe contener una Mayúscula, minúsculas y dos números"
