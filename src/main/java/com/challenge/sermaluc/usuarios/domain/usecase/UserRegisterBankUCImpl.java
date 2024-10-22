@@ -2,8 +2,8 @@ package com.challenge.sermaluc.usuarios.domain.usecase;
 
 import com.challenge.sermaluc.usuarios.config.jwt.JwtTokenProvider;
 import com.challenge.sermaluc.usuarios.domain.model.entity.Phone;
-import com.challenge.sermaluc.usuarios.adapter.controller.model.inbound.UserInfo;
-import com.challenge.sermaluc.usuarios.adapter.controller.model.outbound.UserDTO;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.input.UserRegistrationRequest;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.UserResponse;
 import com.challenge.sermaluc.usuarios.domain.model.entity.User;
 import com.challenge.sermaluc.usuarios.domain.model.entity.enums.AppUserRole;
 import com.challenge.sermaluc.usuarios.domain.model.entity.enums.UserState;
@@ -36,8 +36,8 @@ public class UserRegisterBankUCImpl implements  UserCreateUC{
     private final JwtTokenProvider jwtTokenProvider;
 
 
-    private List<Phone> buildPhones ( final UserInfo userInfo) {
-        return userInfo.getPhones().stream().map(
+    private List<Phone> buildPhones ( final UserRegistrationRequest userRegistrationRequest) {
+        return userRegistrationRequest.getPhones().stream().map(
                 phone -> {
                     Phone p = new Phone();
                     p.setCityCode( phone.getCityCode());
@@ -49,46 +49,46 @@ public class UserRegisterBankUCImpl implements  UserCreateUC{
 
     /**
      * esta funcion sirve para registrar a un usuarios con sus respectivas validaciones.
-     * @param userInfo
+     * @param userRegistrationRequest
      * @return UserDTO
      */
     @Override
-    public UserDTO register(UserInfo userInfo) {
+    public UserResponse register(UserRegistrationRequest userRegistrationRequest) {
 
-        userValidatorService.throwIfEmailInvalid(userInfo.getEmail());
-        userValidatorService.throwIfUserExits(userInfo.getEmail());
-        userValidatorService.throwIfPasswordInvalid(userInfo.getPassword());
+        userValidatorService.throwIfEmailInvalid(userRegistrationRequest.getEmail());
+        userValidatorService.throwIfUserExits(userRegistrationRequest.getEmail());
+        userValidatorService.throwIfPasswordInvalid(userRegistrationRequest.getPassword());
 
         User user =  new User();
 
 
         String token = jwtTokenProvider.createToken(
-                userInfo.getEmail(),
+                userRegistrationRequest.getEmail(),
                 new ArrayList<>(Arrays.asList(AppUserRole.ROLE_CLIENT))
         );
 
         user.setToken(token);
 
-        user.setUsername(userInfo.getEmail());
-        user.setName(userInfo.getName());
-        user.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+        user.setUsername(userRegistrationRequest.getEmail());
+        user.setName(userRegistrationRequest.getName());
+        user.setPassword(passwordEncoder.encode(userRegistrationRequest.getPassword()));
         user.setStatus(UserState.ACTIVE);
 
         LocalDateTime now = LocalDateTime.now();
         user.setCreated(now);
         user.setModified(now);
         user.setLastLogin(now);
-        user.setPhoneList( buildPhones(userInfo));
-        return buildUserDTO( userService.save(user), userInfo);
+        user.setPhoneList( buildPhones(userRegistrationRequest));
+        return buildUserDTO( userService.save(user), userRegistrationRequest);
     }
 
-    private UserDTO buildUserDTO(User user, UserInfo userInfo) {
-        return new UserDTO(
+    private UserResponse buildUserDTO(User user, UserRegistrationRequest userRegistrationRequest) {
+        return new UserResponse(
                 user.getUserId(),
                 user.getName(),
                 user.getUsername(),
                 user.getToken(),
-                userInfo.getPhones(),
+                userRegistrationRequest.getPhones(),
                 user.getCreated(),
                 user.getModified(),
                 user.getLastLogin(),

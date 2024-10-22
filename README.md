@@ -69,7 +69,7 @@ para ejecutar una prueba específica:
       "name": string,
       "email": string,
       "password":string",
-      "phones":[
+      "phoneResponse":[
           {
           "number":string,
           "citycode":string,
@@ -88,7 +88,7 @@ para ejecutar una prueba específica:
   "registered": Date,
   "updated":Date,
   "lastLogin":Date,
-  "phones": [
+  "phoneResponse": [
       {
           "number": string,
           "citycode": string,
@@ -120,7 +120,7 @@ para ejecutar una prueba específica:
             "registered": Date,
             "updated":Date,
             "lastLogin":Date,
-            "phones": [
+            "phoneResponse": [
                 {
                     "number": string,
                     "citycode": string,

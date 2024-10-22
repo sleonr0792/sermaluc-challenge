@@ -1,8 +1,8 @@
 package com.challenge.sermaluc.usuarios.adapter.database.user;
 
-import com.challenge.sermaluc.usuarios.adapter.controller.model.Phones;
-import com.challenge.sermaluc.usuarios.adapter.controller.model.outbound.UserDTO;
-import com.challenge.sermaluc.usuarios.adapter.database.repository.UserRepository;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.PhoneResponse;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.UserResponse;
+import com.challenge.sermaluc.usuarios.adapter.persistence.repository.JpaUserRepository;
 import com.challenge.sermaluc.usuarios.domain.model.entity.User;
 import com.challenge.sermaluc.usuarios.domain.port.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,22 +16,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final JpaUserRepository jpaUserRepository;
     @Override
     public User findUserByEmail(String email) {
-        return userRepository.findUserByUsername(email);
+        return jpaUserRepository.findUserByUsername(email);
     }
 
     @Override
     public User save(User user) {
-        return userRepository.save(user);
+        return jpaUserRepository.save(user);
     }
 
     @Override
-    public UserDTO listUserByEmail(String email) {
+    public UserResponse listUserByEmail(String email) {
 
-        UserDTO user = userRepository.encontrarUserByEmail(email);
-        List<Phones> phones = userRepository.findPhonesByUserId(user.getId());
+        UserResponse user = jpaUserRepository.encontrarUserByEmail(email);
+        List<PhoneResponse> phones = jpaUserRepository.findPhonesByUserId(user.getId());
         user.setPhones(phones);
         return user;
     }

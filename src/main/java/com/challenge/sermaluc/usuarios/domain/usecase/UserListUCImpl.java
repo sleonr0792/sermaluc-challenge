@@ -1,6 +1,6 @@
 package com.challenge.sermaluc.usuarios.domain.usecase;
 
-import com.challenge.sermaluc.usuarios.adapter.controller.model.outbound.UserDTO;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.UserResponse;
 import com.challenge.sermaluc.usuarios.domain.port.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class UserListUCImpl implements  UserListUC{
      * @return List<UserDTO>
      */
     @Override
-    public UserDTO listUserByEmail(String email) {
+    public UserResponse listUserByEmail(String email) {
         return  userService.listUserByEmail(email);
     }
 }

@@ -1,7 +1,7 @@
-package com.challenge.sermaluc.usuarios.adapter.controller;
+package com.challenge.sermaluc.usuarios.adapter.web;
 
-import com.challenge.sermaluc.usuarios.adapter.controller.model.inbound.UserInfo;
-import com.challenge.sermaluc.usuarios.adapter.controller.model.outbound.UserDTO;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.input.UserRegistrationRequest;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.UserResponse;
 import com.challenge.sermaluc.usuarios.config.exceptions.BusinessErrorResponse;
 import com.challenge.sermaluc.usuarios.config.exceptions.ExceptionHandlerRestController;
 import com.challenge.sermaluc.usuarios.domain.usecase.UserCreateUC;
@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
 /**
  * Controlador de Usuarios  para la peticiones de creación y listado.
@@ -27,7 +26,7 @@ import org.springframework.web.client.HttpClientErrorException;
 @Slf4j
 @Tag(name="users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserRestController {
 
     private final UserCreateUC userCreateUC;
     private final UserListUC userListUC;
@@ -37,7 +36,7 @@ public class UserController {
      *  guardar el nuevo usuarios.
      *  En caso de alguna validación no cumpla se lanza un excepcion con el mensaje correspondiente al error.
      *
-     * @param userInfo
+     * @param userRegistrationRequest
      * @return UserDTO
      */
     @Operation(
@@ -58,9 +57,9 @@ public class UserController {
 
     })
     @PostMapping(value = "",  produces = {MediaType.APPLICATION_JSON_VALUE})
-    public UserDTO registerUser(@RequestBody UserInfo userInfo) {
-        log.info("Registro de Usuario: {}", userInfo.getEmail());
-        return userCreateUC.register(userInfo);
+    public UserResponse registerUser(@RequestBody UserRegistrationRequest userRegistrationRequest) {
+        log.info("Registro de Usuario: {}", userRegistrationRequest.getEmail());
+        return userCreateUC.register(userRegistrationRequest);
     }
 
 
@@ -84,7 +83,7 @@ public class UserController {
 
     })
     @GetMapping(value = "/list/{email}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public UserDTO listUsers(@PathVariable String email) {
+    public UserResponse listUsers(@PathVariable String email) {
         return userListUC.listUserByEmail(email);
     }
 

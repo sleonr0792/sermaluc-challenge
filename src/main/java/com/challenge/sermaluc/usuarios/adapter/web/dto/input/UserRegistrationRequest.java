@@ -1,6 +1,6 @@
-package com.challenge.sermaluc.usuarios.adapter.controller.model.inbound;
+package com.challenge.sermaluc.usuarios.adapter.web.dto.input;
 
-import com.challenge.sermaluc.usuarios.adapter.controller.model.Phones;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.PhoneResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Getter
 @Schema(description = "Requests para la solicitud de creacion de usuario")
-public class UserInfo {
+public class UserRegistrationRequest {
     @Schema(description = "nombre usuario", example = "example")
     private String name;
 
@@ -20,5 +20,5 @@ public class UserInfo {
     @Schema(description = "email usuario", example = "Abcd12")
     private String password;
 
-    private List<Phones> phones;
+    private List<PhoneResponse> phones;
 }

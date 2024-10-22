@@ -1,8 +1,8 @@
 package com.challenge.sermaluc.usuarios.domain.usercase;
 
-import com.challenge.sermaluc.usuarios.adapter.controller.model.Phones;
-import com.challenge.sermaluc.usuarios.adapter.controller.model.inbound.UserInfo;
-import com.challenge.sermaluc.usuarios.adapter.controller.model.outbound.UserDTO;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.PhoneResponse;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.input.UserRegistrationRequest;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.UserResponse;
 import com.challenge.sermaluc.usuarios.config.exceptions.BusinessException;
 import com.challenge.sermaluc.usuarios.config.jwt.JwtTokenProvider;
 import com.challenge.sermaluc.usuarios.domain.model.entity.User;
@@ -45,7 +45,7 @@ public class  UserRegisterBankUCImplTest {
 
     private User userEntity;
 
-    private UserInfo userInfo;
+    private UserRegistrationRequest userRegistrationRequest;
 
     private String formatErrorPassword;
 
@@ -53,7 +53,7 @@ public class  UserRegisterBankUCImplTest {
     void setUp() {
         formatErrorPassword = "Contraseña inválida, debe contener una Mayúscula, minúsculas y dos números";
 
-        Phones phones = new Phones("123","1234566","051" );
+        PhoneResponse phoneResponse = new PhoneResponse("123","1234566","051" );
         String email = "micorreo@domain.cl";
         LocalDateTime now = LocalDateTime.now();
         userEntity = new User();
@@ -64,12 +64,12 @@ public class  UserRegisterBankUCImplTest {
         userEntity.setCreated(now);
         userEntity.setModified(now);
         userEntity.setLastLogin(now);
-        userInfo = new UserInfo();
-        userInfo.setEmail(email);
-        userInfo.setName("Test user");
-        userInfo.setPassword("Pass12");
-        userInfo.setPhones(Arrays.asList(
-                phones
+        userRegistrationRequest = new UserRegistrationRequest();
+        userRegistrationRequest.setEmail(email);
+        userRegistrationRequest.setName("Test user");
+        userRegistrationRequest.setPassword("Pass12");
+        userRegistrationRequest.setPhones(Arrays.asList(
+                phoneResponse
         ));
         userRegisterBankUC = new UserRegisterBankUCImpl(
                 userService,
@@ -84,7 +84,7 @@ public class  UserRegisterBankUCImplTest {
     void whenUserRegister() {
 
         when(userService.save(any())).thenReturn(userEntity);
-        UserDTO response = userRegisterBankUC.register(userInfo);
+        UserResponse response = userRegisterBankUC.register(userRegistrationRequest);
         Assertions.assertEquals(userEntity.getUsername(), response.getEmail());
     }
 
@@ -95,10 +95,10 @@ public class  UserRegisterBankUCImplTest {
         doThrow(new BusinessException(formatErrorPassword))
                 .when(userValidatorService)
                 .throwIfPasswordInvalid(any());
-        userInfo.setPassword("passwordSinformato");
+        userRegistrationRequest.setPassword("passwordSinformato");
         BusinessException exception = assertThrows(
                 BusinessException.class,
-                () -> userRegisterBankUC.register(userInfo)
+                () -> userRegisterBankUC.register(userRegistrationRequest)
         );
 
         assertEquals(formatErrorPassword, exception.getMessage());

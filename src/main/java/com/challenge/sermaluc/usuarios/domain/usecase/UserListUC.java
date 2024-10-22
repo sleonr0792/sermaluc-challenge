@@ -1,7 +1,7 @@
 package com.challenge.sermaluc.usuarios.domain.usecase;
 
-import com.challenge.sermaluc.usuarios.adapter.controller.model.outbound.UserDTO;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.UserResponse;
 
 public interface UserListUC {
-    UserDTO listUserByEmail(String email);
+    UserResponse listUserByEmail(String email);
 }

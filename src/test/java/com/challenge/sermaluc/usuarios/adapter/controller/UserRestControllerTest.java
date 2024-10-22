@@ -1,8 +1,9 @@
 package com.challenge.sermaluc.usuarios.adapter.controller;
 
-import com.challenge.sermaluc.usuarios.adapter.controller.model.Phones;
-import com.challenge.sermaluc.usuarios.adapter.controller.model.inbound.UserInfo;
-import com.challenge.sermaluc.usuarios.adapter.controller.model.outbound.UserDTO;
+import com.challenge.sermaluc.usuarios.adapter.web.UserRestController;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.PhoneResponse;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.input.UserRegistrationRequest;
+import com.challenge.sermaluc.usuarios.adapter.web.dto.output.UserResponse;
 import com.challenge.sermaluc.usuarios.domain.usecase.UserCreateUC;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,14 +22,14 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Rest Controller User")
-class UserControllerTest {
+class UserRestControllerTest {
 
     @Mock
     private UserCreateUC userCreateUC;
     @InjectMocks
-    private UserController userController;
+    private UserRestController userRestController;
 
-    private UserInfo userInfo;
+    private UserRegistrationRequest userRegistrationRequest;
 
     private String username;
 
@@ -36,18 +37,18 @@ class UserControllerTest {
     @BeforeEach
     public void setUp(){
 
-        userInfo = new UserInfo();
+        userRegistrationRequest = new UserRegistrationRequest();
         username = "micorreo@domain.cl";
-        userInfo.setEmail(username);
-        userInfo.setName("User Test");
-        userInfo.setPassword("Pass12");
-        Phones phones =  new Phones(
+        userRegistrationRequest.setEmail(username);
+        userRegistrationRequest.setName("User Test");
+        userRegistrationRequest.setPassword("Pass12");
+        PhoneResponse phoneResponse =  new PhoneResponse(
                 "123",
                 "051",
                 "1234566"
         );
 
-        userInfo.setPhones(Arrays.asList(phones));
+        userRegistrationRequest.setPhones(Arrays.asList(phoneResponse));
 
     }
 
@@ -55,12 +56,12 @@ class UserControllerTest {
     @DisplayName("When Execute Register User, Successful Process")
     List<DynamicTest> whenExecuteUserSuccessfullProcess()  {
 
-        UserDTO usernameDTO =  new UserDTO();
+        UserResponse usernameDTO =  new UserResponse();
         usernameDTO.setEmail(username);
         when(userCreateUC.register(any())).thenReturn(usernameDTO);
 
-        UserDTO response = Assertions.assertDoesNotThrow(
-                () -> userController.registerUser(userInfo));
+        UserResponse response = Assertions.assertDoesNotThrow(
+                () -> userRestController.registerUser(userRegistrationRequest));
         return Arrays.asList(
                 DynamicTest.dynamicTest("Register user",
                         () -> Assertions.assertEquals(username, response.getEmail())),

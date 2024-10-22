@@ -1,7 +1,7 @@
 package com.challenge.sermaluc.usuarios.adapter.database.user;
 
 
-import com.challenge.sermaluc.usuarios.adapter.database.repository.UserRepository;
+import com.challenge.sermaluc.usuarios.adapter.persistence.repository.JpaUserRepository;
 import com.challenge.sermaluc.usuarios.domain.model.entity.Phone;
 import com.challenge.sermaluc.usuarios.domain.model.entity.User;
 import com.challenge.sermaluc.usuarios.domain.model.entity.enums.UserState;
@@ -22,14 +22,14 @@ import static org.mockito.Mockito.when;
 class UserServiceImplTest {
     private UserServiceImpl userService;
     @Mock
-    private UserRepository userRepository;
+    private JpaUserRepository jpaUserRepository;
 
     private User user;
     private String email;
     @BeforeEach
     void setUp() {
 
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(jpaUserRepository);
 
         user = new User();
 
@@ -54,7 +54,7 @@ class UserServiceImplTest {
     @DisplayName("When Find by username, then Return Data.")
     void whenFindByUsernameReturnData() {
 
-        when(userRepository.findUserByUsername(anyString())).thenReturn(user);
+        when(jpaUserRepository.findUserByUsername(anyString())).thenReturn(user);
         User userResponse = userService.findUserByEmail(email);
         Assertions.assertEquals(email, userResponse.getUsername());
     }
