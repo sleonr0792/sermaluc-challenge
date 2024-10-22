@@ -42,6 +42,4 @@ public class UserDTO {
         this.lastLogin = lastLogin;
         this.state = state;
     }
-
-
 }
