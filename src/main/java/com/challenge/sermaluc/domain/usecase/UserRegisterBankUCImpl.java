@@ -1,7 +1,8 @@
 package com.challenge.sermaluc.domain.usecase;
-import com.challenge.sermaluc.config.enums.EResponse;
 import com.challenge.sermaluc.config.exceptions.BusinessException;
 import com.challenge.sermaluc.config.jwt.JwtTokenProvider;
+import com.challenge.sermaluc.domain.config.UserDomainConfig;
+import com.challenge.sermaluc.domain.config.UserPasswordConfig;
 import com.challenge.sermaluc.domain.model.entity.Phone;
 import com.challenge.sermaluc.adapter.controller.model.inbound.UserInfo;
 import com.challenge.sermaluc.adapter.controller.model.outbound.UserDTO;
@@ -32,11 +33,9 @@ public class UserRegisterBankUCImpl implements  UserCreateUC{
 
 
     private final UserService userService;
-    @Value("${user.domain.pattern}")
-    private String RGX_DOMAIN ;
 
-    @Value("${user.password.pattern}")
-    private String RGX_PASS;
+    private final UserDomainConfig userDomainConfig;
+    private final UserPasswordConfig userPasswordConfig;
 
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -46,11 +45,11 @@ public class UserRegisterBankUCImpl implements  UserCreateUC{
 
     private void throwIfEmailInvalid(final String email) {
 
-        Pattern pattern = Pattern.compile(RGX_DOMAIN);
+        Pattern pattern = Pattern.compile(userDomainConfig.getPattern());
         Matcher matcher = pattern.matcher(email);
 
         if(!matcher.matches()){
-             throw new BusinessException(EResponse.EMAIL_INVALID);
+             throw new BusinessException(userDomainConfig.getErrorFormat());
         }
     }
 
@@ -58,17 +57,17 @@ public class UserRegisterBankUCImpl implements  UserCreateUC{
 
         User user = userService.findUserByEmail(email);
         if(Objects.nonNull(user)){
-            throw new BusinessException(EResponse.EMAIL_EXIST);
+            throw new BusinessException(userDomainConfig.getErrorEmailExist());
         }
 
     }
 
     private void throwIfPasswordInvalid(final String pass){
-        Pattern pattern = Pattern.compile(RGX_PASS);
+        Pattern pattern = Pattern.compile(userPasswordConfig.getPattern());
         Matcher matcher = pattern.matcher(pass);
 
         if(!matcher.matches()){
-            throw new BusinessException(EResponse.PASS_INVALID);
+            throw new BusinessException(userPasswordConfig.getErrorFormat());
         }
 
     }

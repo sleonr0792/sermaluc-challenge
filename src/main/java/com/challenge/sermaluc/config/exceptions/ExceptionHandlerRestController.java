@@ -27,7 +27,7 @@ public class ExceptionHandlerRestController {
                 exception);
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(MessageError.builder()
-                        .mensaje(exception.getCode().getDescription())
+                        .mensaje(exception.getMessage())
                         .build());
     }
 
