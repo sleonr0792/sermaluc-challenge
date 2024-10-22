@@ -1,8 +1,6 @@
 package com.challenge.sermaluc.domain.usecase;
-import com.challenge.sermaluc.config.exceptions.BusinessException;
+
 import com.challenge.sermaluc.config.jwt.JwtTokenProvider;
-import com.challenge.sermaluc.domain.config.UserDomainConfig;
-import com.challenge.sermaluc.domain.config.UserPasswordConfig;
 import com.challenge.sermaluc.domain.model.entity.Phone;
 import com.challenge.sermaluc.adapter.controller.model.inbound.UserInfo;
 import com.challenge.sermaluc.adapter.controller.model.outbound.UserDTO;
@@ -10,10 +8,10 @@ import com.challenge.sermaluc.domain.model.entity.User;
 import com.challenge.sermaluc.domain.model.entity.enums.AppUserRole;
 import com.challenge.sermaluc.domain.model.entity.enums.UserState;
 import com.challenge.sermaluc.domain.port.UserService;
+import com.challenge.sermaluc.domain.usecase.validator.UserValidatorService;
 import lombok.RequiredArgsConstructor;
 
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -21,11 +19,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ *  Caso de uso para el registro de Usuarios
+ */
 @Setter
 @Component
 @RequiredArgsConstructor
@@ -33,44 +31,10 @@ public class UserRegisterBankUCImpl implements  UserCreateUC{
 
 
     private final UserService userService;
-
-    private final UserDomainConfig userDomainConfig;
-    private final UserPasswordConfig userPasswordConfig;
-
+    private final UserValidatorService userValidatorService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-
-
-
-    private void throwIfEmailInvalid(final String email) {
-
-        Pattern pattern = Pattern.compile(userDomainConfig.getPattern());
-        Matcher matcher = pattern.matcher(email);
-
-        if(!matcher.matches()){
-             throw new BusinessException(userDomainConfig.getErrorFormat());
-        }
-    }
-
-    private void throwIfUserExits(final String email) {
-
-        User user = userService.findUserByEmail(email);
-        if(Objects.nonNull(user)){
-            throw new BusinessException(userDomainConfig.getErrorEmailExist());
-        }
-
-    }
-
-    private void throwIfPasswordInvalid(final String pass){
-        Pattern pattern = Pattern.compile(userPasswordConfig.getPattern());
-        Matcher matcher = pattern.matcher(pass);
-
-        if(!matcher.matches()){
-            throw new BusinessException(userPasswordConfig.getErrorFormat());
-        }
-
-    }
 
     private List<Phone> buildPhones ( final UserInfo userInfo) {
         return userInfo.getPhones().stream().map(
@@ -83,12 +47,17 @@ public class UserRegisterBankUCImpl implements  UserCreateUC{
                 ).collect(Collectors.toList());
     }
 
+    /**
+     * esta funcion sirve para registrar a un usuarios con sus respectivas validaciones.
+     * @param userInfo
+     * @return UserDTO
+     */
     @Override
     public UserDTO register(UserInfo userInfo) {
 
-        throwIfEmailInvalid(userInfo.getEmail());
-        throwIfUserExits(userInfo.getEmail());
-        throwIfPasswordInvalid(userInfo.getPassword());
+        userValidatorService.throwIfEmailInvalid(userInfo.getEmail());
+        userValidatorService.throwIfUserExits(userInfo.getEmail());
+        userValidatorService.throwIfPasswordInvalid(userInfo.getPassword());
 
         User user =  new User();
 
@@ -112,7 +81,6 @@ public class UserRegisterBankUCImpl implements  UserCreateUC{
         user.setPhoneList( buildPhones(userInfo));
         return buildUserDTO( userService.save(user), userInfo);
     }
-
 
     private UserDTO buildUserDTO(User user, UserInfo userInfo){
 

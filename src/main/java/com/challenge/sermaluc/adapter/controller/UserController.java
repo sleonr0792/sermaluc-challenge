@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador de Usuarios  para la peticiones de creación y listado.
+ *
+ */
 @RestController
 @RequestMapping("${application.client.api.path}" + "/users")
 @Slf4j
@@ -27,6 +31,14 @@ public class UserController {
     private final UserCreateUC userCreateUC;
     private final UserListUC userListUC;
 
+    /***
+     *  Es el controlador donde se le pasa la información del requests para ser validada y posteriormente
+     *  guardar el nuevo usuario.
+     *  En caso de alguna validación no cumpla se lanza un excepcion con el mensaje correspondiente al error.
+     *
+     * @param userInfo
+     * @return UserDTO
+     */
     @Operation(
             summary = "Crear usuarios",
             description = "Controlador para registrar usuarios",
@@ -44,6 +56,18 @@ public class UserController {
     }
 
 
+    /***qwe
+     * Controlador para listar los usuarios registrados con sus numeros correspondientes.
+     * @return List<UserDTO>
+     */
+    @Operation(
+            summary = "Listar usuarios",
+            description = "Controlador para listar usuarios",
+            tags = {"users"}
+    )
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "lista de usuarios"),
+    })
     @GetMapping(value = "/list", produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<UserDTO> listUsers() {
         log.info("Listado de usuarios");

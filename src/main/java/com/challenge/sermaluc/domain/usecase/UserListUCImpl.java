@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Caso de Uso para listar a los usuarios registrados
+ */
 @Component
 @RequiredArgsConstructor
 public class UserListUCImpl implements  UserListUC{
@@ -27,6 +30,11 @@ public class UserListUCImpl implements  UserListUC{
                     .build())
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Caso de uso para listar usuarios
+     * @return List<UserDTO>
+     */
     @Override
     public List<UserDTO> listAll() {
         List<User>  users =  userService.listAll();
