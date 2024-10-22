@@ -1,7 +1,9 @@
 package com.challenge.sermaluc.usuarios.config.exceptions;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +22,7 @@ public class ExceptionHandlerRestController {
         log.error("[Controller][Error] exception Ocurrio un error durante la ejecucion [businessException]: ",
                 exception);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(MessageError.builder()
-                        .mensaje(exception.getMessage())
-                        .build());
+                .body(new BusinessErrorResponse(exception));
     }
 
     @ExceptionHandler(value = HttpClientErrorException.Forbidden.class)
@@ -30,7 +30,8 @@ public class ExceptionHandlerRestController {
     public ResponseEntity<Object> noAccesibleRecurso(Exception exception) {
         log.error("[Controller][Error] exception Ocurrio un error durante la ejecucion  [noAccesibleRecurso]: ",
                 exception);
-        return new ResponseEntity<>("No se puede acceder a este recurso", HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new MessageError( "No se puede acceder a este recurso"),
+                HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = HttpClientErrorException.NotFound.class)
@@ -38,7 +39,8 @@ public class ExceptionHandlerRestController {
     public ResponseEntity<Object> recursoNoEncontrado(Exception exception) {
         log.error("[Controller][Error] exception Ocurrio un error durante la ejecucion [recursoNoEncontrado]: ",
                 exception);
-        return new ResponseEntity<>("Recurso no encontrado", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(
+                new MessageError("Recurso no encontrado"), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = Exception.class)
@@ -46,13 +48,18 @@ public class ExceptionHandlerRestController {
     public ResponseEntity<Object> genericException(Exception exception) {
         log.error("[Controller][Error] exception Ocurrio un error durante la ejecucion [genericException]: ",
                 exception);
-        return new ResponseEntity<>("Ha Ocurrido un error Inesperado", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(
+               new MessageError("Ha Ocurrido un error Inesperado"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @Builder
-    @Data
-    static class MessageError {
-        private String mensaje;
+    @Getter
+    @Schema(description = "clase de errores del servidor")
+    public class MessageError {
+        @Schema(description = "error de http", example = "403|404|500")
+        private final String mensaje;
+        public MessageError(String mensaje) {
+            this.mensaje = mensaje;
+        }
     }
 }
 

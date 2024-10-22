@@ -2,7 +2,8 @@ package com.challenge.sermaluc.usuarios.adapter.controller;
 
 import com.challenge.sermaluc.usuarios.adapter.controller.model.inbound.UserInfo;
 import com.challenge.sermaluc.usuarios.adapter.controller.model.outbound.UserDTO;
-import com.challenge.sermaluc.usuarios.config.exceptions.BusinessException;
+import com.challenge.sermaluc.usuarios.config.exceptions.BusinessErrorResponse;
+import com.challenge.sermaluc.usuarios.config.exceptions.ExceptionHandlerRestController;
 import com.challenge.sermaluc.usuarios.domain.usecase.UserCreateUC;
 import com.challenge.sermaluc.usuarios.domain.usecase.UserListUC;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,13 +48,13 @@ public class UserController {
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "operacion de registro completado"),
             @ApiResponse(responseCode = "400", description = "Solicitud inválida (Bad Request)",
-                    content = @Content(schema = @Schema(implementation = BusinessException.class))),
+                    content = @Content(schema = @Schema(implementation = BusinessErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "Acceso prohibido (Forbidden)",
-                    content = @Content(schema = @Schema(implementation = HttpClientErrorException.Forbidden.class))),
+                    content = @Content(schema = @Schema(implementation = ExceptionHandlerRestController.MessageError.class))),
             @ApiResponse(responseCode = "404", description = "recurso no encontrado (notfound)",
-                    content = @Content(schema = @Schema(implementation = HttpClientErrorException.NotFound.class))),
+                    content = @Content(schema = @Schema(implementation = ExceptionHandlerRestController.MessageError.class))),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor",
-                    content = @Content(schema = @Schema(implementation = Exception.class)))
+                    content = @Content(schema = @Schema(implementation = ExceptionHandlerRestController.MessageError.class)))
 
     })
     @PostMapping(value = "",  produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -63,7 +64,7 @@ public class UserController {
     }
 
 
-    /***qwe
+    /***
      * Controlador para listar un usuarios por correo.
      * @return UserDTO
      */
@@ -74,13 +75,12 @@ public class UserController {
     )
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "busqueda de usuarios por email"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida (Bad Request)"),
             @ApiResponse(responseCode = "403", description = "Acceso prohibido (Forbidden)",
-                    content = @Content(schema = @Schema(implementation = HttpClientErrorException.Forbidden.class))),
+                    content = @Content(schema = @Schema(implementation = ExceptionHandlerRestController.MessageError.class))),
             @ApiResponse(responseCode = "404", description = "recurso no encontrado (notfound)",
-                    content = @Content(schema = @Schema(implementation = HttpClientErrorException.NotFound.class))),
+                    content = @Content(schema = @Schema(implementation = ExceptionHandlerRestController.MessageError.class))),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor",
-                    content = @Content(schema = @Schema(implementation = Exception.class)))
+                    content = @Content(schema = @Schema(implementation = ExceptionHandlerRestController.MessageError.class)))
 
     })
     @GetMapping(value = "/list/{email}", produces = {MediaType.APPLICATION_JSON_VALUE})
