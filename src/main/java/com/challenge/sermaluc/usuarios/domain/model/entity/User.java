@@ -2,8 +2,8 @@ package com.challenge.sermaluc.usuarios.domain.model.entity;
 
 
 
-import com.challenge.sermaluc.usuarios.domain.model.entity.enums.AppUserRole;
-import com.challenge.sermaluc.usuarios.domain.model.entity.enums.UserState;
+import com.challenge.sermaluc.usuarios.domain.model.enums.AppUserRole;
+import com.challenge.sermaluc.usuarios.domain.model.enums.UserState;
 import lombok.Data;
 
 import javax.persistence.*;
